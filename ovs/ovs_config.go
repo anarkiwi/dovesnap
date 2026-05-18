@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/docker/docker/api/types/network"
 	networkplugin "github.com/docker/go-plugins-helpers/network"
+	"github.com/moby/moby/api/types/network"
 )
 
 const (
@@ -331,10 +331,8 @@ func mustGetBridgeDpidFromResource(r *network.Inspect) (string, uint64) {
 func getGatewayFromResource(r *network.Inspect) (string, string) {
 	if len(r.IPAM.Config) > 0 {
 		config := r.IPAM.Config[0]
-		subnetIP := config.Subnet
-		parts := strings.Split(subnetIP, "/")
-		if len(parts) == 2 && parts[0] != "" && parts[1] != "" {
-			return config.Gateway, parts[1]
+		if config.Subnet.IsValid() && config.Gateway.IsValid() {
+			return config.Gateway.String(), strconv.Itoa(config.Subnet.Bits())
 		}
 	}
 	return "", ""

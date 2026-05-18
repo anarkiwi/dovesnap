@@ -13,8 +13,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/docker/docker/api/types/container"
 	networkplugin "github.com/docker/go-plugins-helpers/network"
+	"github.com/moby/moby/api/types/container"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -732,7 +732,7 @@ func mustHandleJoinContainer(d *Driver, opMsg DovesnapOp, OFPorts *map[string]OF
 	}
 	pid := containerInspect.State.Pid
 	containerNetSettings := containerInspect.NetworkSettings.Networks[ns.NetworkName]
-	macAddress := containerNetSettings.MacAddress
+	macAddress := containerNetSettings.MacAddress.String()
 
 	createNsLink(pid, containerInspect.ID)
 	defaultInterface := "eth0"
@@ -761,8 +761,8 @@ func mustHandleJoinContainer(d *Driver, opMsg DovesnapOp, OFPorts *map[string]OF
 	log.Debugf("container network settings: %+v", containerNetSettings)
 
 	log.Debugf("%+v", opMsg.Options[portMapOption])
-	hostIP := containerNetSettings.IPAddress
-	gatewayIP := containerNetSettings.Gateway
+	hostIP := containerNetSettings.IPAddress.String()
+	gatewayIP := containerNetSettings.Gateway.String()
 
 	// Regular docker uses docker proxy, to listen on the configured port and proxy them into the container.
 	// dovesnap doesn't get to use docker proxy, so we listen on the configured port on the network's gateway instead.
@@ -876,8 +876,8 @@ func mustHandleLeaveContainer(d *Driver, opMsg DovesnapOp, OFPorts *map[string]O
 	d.faucetconfrpcer.mustDeleteDpInterface(ns.NetworkName, ofPort)
 
 	containerNetSettings := containerMap.containerInspect.NetworkSettings.Networks[ns.NetworkName]
-	hostIP := containerNetSettings.IPAddress
-	gatewayIP := containerNetSettings.Gateway
+	hostIP := containerNetSettings.IPAddress.String()
+	gatewayIP := containerNetSettings.Gateway.String()
 	for _, portMapRaw := range containerMap.Options[portMapOption].([]interface{}) {
 		hostPort, port, ipProto := mustGetPortMap(portMapRaw)
 		mustDeleteGatewayPortMap(ns.BridgeName, ipProto, gatewayIP, hostIP, hostPort, port)
