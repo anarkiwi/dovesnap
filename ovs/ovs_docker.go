@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/docker/docker/api/types/container"
-	"github.com/docker/docker/api/types/network"
-	"github.com/docker/docker/client"
+	"github.com/moby/moby/api/types/container"
+	"github.com/moby/moby/api/types/network"
+	"github.com/moby/moby/client"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -17,30 +17,28 @@ type dockerer struct {
 }
 
 func (c *dockerer) mustGetDockerClient() {
-	// docker, err := client.NewClientWithOpts(client.FromEnv)
-	// TODO: https://github.com/moby/moby/issues/40185
-	client, err := client.NewEnvClient()
+	docker, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
 	if err != nil {
 		panic(fmt.Errorf("could not connect to docker: %s", err))
 	}
-	c.client = client
+	c.client = docker
 }
 
 func (c *dockerer) mustGetShortEngineID() string {
-	info, err := c.client.Info(context.Background())
+	result, err := c.client.Info(context.Background(), client.InfoOptions{})
 	if err != nil {
 		panic(err)
 	}
-	log.Debugf("Docker Engine ID %s:", info.ID)
-	engineId := base36to16(strings.Split(info.ID, ":")[0])
+	log.Debugf("Docker Engine ID %s:", result.Info.ID)
+	engineId := base36to16(strings.Split(result.Info.ID, ":")[0])
 	return engineId
 }
 
 func (c *dockerer) mustGetNetworkInspectFromID(NetworkID string) network.Inspect {
 	for i := 0; i < dockerRetries; i++ {
-		netInspect, err := c.client.NetworkInspect(context.Background(), NetworkID, network.InspectOptions{})
+		netInspect, err := c.client.NetworkInspect(context.Background(), NetworkID, client.NetworkInspectOptions{})
 		if err == nil {
-			return netInspect
+			return netInspect.Network
 		}
 		time.Sleep(1 * time.Second)
 	}
@@ -52,12 +50,12 @@ func (c *dockerer) mustGetNetworkNameFromID(NetworkID string) string {
 }
 
 func (c *dockerer) mustGetNetworkList() map[string]string {
-	networkList, err := c.client.NetworkList(context.Background(), network.ListOptions{})
+	networkList, err := c.client.NetworkList(context.Background(), client.NetworkListOptions{})
 	if err != nil {
 		panic(fmt.Errorf("could not get docker networks: %s", err))
 	}
 	netlist := make(map[string]string)
-	for _, net := range networkList {
+	for _, net := range networkList.Items {
 		if net.Driver == DriverName {
 			netlist[net.ID] = net.Name
 		}
@@ -74,12 +72,12 @@ func (c *dockerer) getContainerFromEndpoint(NetworkID string, EndpointID string)
 				log.Debugf("about to inspect container %+v", EndpointID)
 				ctx, cancel := context.WithTimeout(context.Background(), dockerRetries*time.Second)
 				defer cancel()
-				containerInspect, err := c.client.ContainerInspect(ctx, containerID)
+				containerInspect, err := c.client.ContainerInspect(ctx, containerID, client.ContainerInspectOptions{})
 				if err != nil {
 					continue
 				}
 				log.Debugf("returned %+v", containerInspect)
-				return containerInspect, nil
+				return containerInspect.Container, nil
 			}
 		}
 		time.Sleep(2 * time.Second)
