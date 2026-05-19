@@ -1,6 +1,9 @@
 name: test
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
 
 env:
   POETRY_VERSION: 1.8.1
