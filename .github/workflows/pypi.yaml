@@ -8,6 +8,7 @@ on:
 jobs:
   release:
     runs-on: ubuntu-24.04
+    environment: release
     steps:
     - uses: actions/checkout@v6
     - name: Set up Python
@@ -26,5 +27,5 @@ jobs:
     - name: Build package
       id: build_and_publish_packages
       run: |
-        poetry publish -u ${{ secrets.PYPI_USERNAME }} -p ${{ secrets.PYPI_TOKEN }}
-      if: github.repository == 'iqtlabs/dovesnap' && github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+        poetry publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+      if: github.repository == 'anarkiwi/dovesnap' && github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
