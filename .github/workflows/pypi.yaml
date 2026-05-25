@@ -8,6 +8,9 @@ jobs:
   release:
     runs-on: ubuntu-24.04
     environment: release
+    permissions:
+      contents: read
+      id-token: write
     steps:
     - uses: actions/checkout@v6
     - name: Set up Python
@@ -20,11 +23,9 @@ jobs:
         virtualenvs-create: false
         virtualenvs-in-project: false
         version: 1.8.3
-    - name: poetry install
+    - name: Build package
       run: |
        poetry build && poetry install
-    - name: Build package
-      id: build_and_publish_packages
-      run: |
-        poetry publish -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+    - name: Publish to PyPI (trusted publisher OIDC)
+      uses: pypa/gh-action-pypi-publish@release/v1
       if: github.repository == 'anarkiwi/dovesnap' && github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
