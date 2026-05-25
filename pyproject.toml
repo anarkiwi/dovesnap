@@ -1,9 +1,10 @@
 [tool.poetry]
-name = "dovesnap"
+name = "dovesnap-ng"
 version = "1.1.24.dev"
-description = "graphviz generator of dovesnap networks"
+description = "graphviz generator of dovesnap networks (anarkiwi fork)"
 authors = ["Charlie Lewis <clewis@iqt.org>"]
 license = "Apache-2.0"
+packages = [{include = "dovesnap", from = "src"}]
 
 [tool.poetry.dependencies]
 python = ">=3.11,<3.14"
