@@ -9,7 +9,7 @@ require (
 	github.com/docker/libnetwork v0.8.0-dev.2.0.20200219012139-4f65d685bdf9
 	github.com/iqtlabs/faucetconfrpc v1.0.1
 	github.com/kenshaw/baseconv v0.1.1
-	github.com/moby/moby/api v1.54.2
+	github.com/moby/moby/api v1.55.0
 	github.com/moby/moby/client v0.4.1
 	github.com/sirupsen/logrus v1.9.4
 	github.com/vishvananda/netlink v1.3.1
