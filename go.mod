@@ -11,7 +11,7 @@ require (
 	github.com/kenshaw/baseconv v0.1.1
 	github.com/moby/moby/api v1.55.0
 	github.com/moby/moby/client v0.5.1
-	github.com/sirupsen/logrus v1.10.0
+	github.com/sirupsen/logrus v1.10.1
 	github.com/vishvananda/netlink v1.3.1
 	google.golang.org/grpc v1.83.0
 )
