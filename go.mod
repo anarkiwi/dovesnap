@@ -13,7 +13,7 @@ require (
 	github.com/moby/moby/client v0.5.1
 	github.com/sirupsen/logrus v1.10.0
 	github.com/vishvananda/netlink v1.3.1
-	google.golang.org/grpc v1.83.0
+	google.golang.org/grpc v1.83.1
 )
 
 require (
