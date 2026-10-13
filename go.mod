@@ -10,7 +10,7 @@ require (
 	github.com/iqtlabs/faucetconfrpc v1.0.2
 	github.com/kenshaw/baseconv v0.1.1
 	github.com/moby/moby/api v1.56.1
-	github.com/moby/moby/client v0.6.0
+	github.com/moby/moby/client v0.6.2
 	github.com/sirupsen/logrus v1.10.2
 	github.com/vishvananda/netlink v1.3.1
 	google.golang.org/grpc v1.84.0
@@ -23,7 +23,7 @@ require (
 	github.com/containerd/errdefs/pkg v0.3.0 // indirect
 	github.com/coreos/go-systemd v0.0.0-20191104093116-d3cd4ed1dbcf // indirect
 	github.com/distribution/reference v0.6.0 // indirect
-	github.com/docker/go-connections v0.7.0 // indirect
+	github.com/docker/go-connections v0.8.2 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
 	github.com/felixge/httpsnoop v1.1.0 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
