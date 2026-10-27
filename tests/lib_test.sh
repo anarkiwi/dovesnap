@@ -73,7 +73,7 @@ clean_dirs()
                 echo veths leaked: $VETHS
                 exit 1
         fi
-        DIEC=$(docker system events --since=15m --until=0m --filter="container=dovesnap-plugin-1" --filter="event=die" | grep -v exitCode=0)
+        DIEC=$(docker system events --since=15m --until=0m --filter="container=dovesnap-plugin-1" --filter="event=die" | grep "container die" | grep -v exitCode=0)
         if [ "$DIEC" != "" ] ; then
                echo dovesnap exited unexpectedly: $DIEC
                exit 1
