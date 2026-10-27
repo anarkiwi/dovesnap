@@ -1,4 +1,4 @@
-FROM ubuntu:24.04 AS builder
+FROM ubuntu:26.04 AS builder
 LABEL maintainer="Charlie Lewis <clewis@iqt.org>"
 RUN apt-get update && apt-get install -y --no-install-recommends \
     golang ca-certificates
@@ -6,7 +6,7 @@ COPY . /go/src/dovesnap
 WORKDIR /go/src/dovesnap
 RUN go build -o /dovesnap .
 
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 RUN apt-get update && apt-get install -y --no-install-recommends \
     iptables dbus && \
     apt-get clean && \
