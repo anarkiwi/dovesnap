@@ -7,7 +7,7 @@ license = "Apache-2.0"
 packages = [{include = "dovesnap", from = "src"}]
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.14"
+python = ">=3.12,<3.14"
 docker = "7.2.0"
 faucetconfrpc-ng = "1.0.2"
 graphviz = "0.21"
